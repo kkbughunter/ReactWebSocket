@@ -19,6 +19,8 @@ export default function App() {
 
   // --- Connect to MQTT Broker ---
   useEffect(() => {
+    let isActive = true;
+    
     const mqttClient = mqtt.connect("ws://astraval.com:9001/mqtt", {
       username: "testuser",
       password: "password1",
@@ -28,6 +30,7 @@ export default function App() {
     });
 
     mqttClient.on("connect", () => {
+      if (!isActive) return;
       setStatus("✅ Connected");
       console.log("✅ Connected to broker");
       
@@ -43,26 +46,31 @@ export default function App() {
     });
 
     mqttClient.on("reconnect", () => {
+      if (!isActive) return;
       console.log("🔄 Reconnecting...");
       setStatus("🔄 Reconnecting...");
     });
     
     mqttClient.on("disconnect", () => {
+      if (!isActive) return;
       console.log("🔌 Disconnected");
       setStatus("❌ Disconnected");
     });
     
     mqttClient.on("close", () => {
+      if (!isActive) return;
       console.log("🔌 Connection closed");
       setStatus("❌ Connection closed");
     });
     
     mqttClient.on("offline", () => {
+      if (!isActive) return;
       console.log("📴 Offline");
       setStatus("📴 Offline");
     });
     
     mqttClient.on("error", (err) => {
+      if (!isActive) return;
       console.error("❌ MQTT Error:", err);
       setStatus(`❌ Error: ${err.message}`);
     });
@@ -81,6 +89,7 @@ export default function App() {
     setClient(mqttClient);
     
     return () => {
+      isActive = false;
       console.log("🛑 Disconnecting MQTT client");
       mqttClient.end();
     };
