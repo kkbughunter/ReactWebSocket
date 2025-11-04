@@ -44,17 +44,27 @@ export default function App() {
 
     mqttClient.on("reconnect", () => {
       console.log("🔄 Reconnecting...");
-      setStatus("Reconnecting...");
+      setStatus("🔄 Reconnecting...");
+    });
+    
+    mqttClient.on("disconnect", () => {
+      console.log("🔌 Disconnected");
+      setStatus("❌ Disconnected");
     });
     
     mqttClient.on("close", () => {
-      console.log("🔌 Disconnected");
-      setStatus("Disconnected ❌");
+      console.log("🔌 Connection closed");
+      setStatus("❌ Connection closed");
+    });
+    
+    mqttClient.on("offline", () => {
+      console.log("📴 Offline");
+      setStatus("📴 Offline");
     });
     
     mqttClient.on("error", (err) => {
       console.error("❌ MQTT Error:", err);
-      setStatus(`Error: ${err.message}`);
+      setStatus(`❌ Error: ${err.message}`);
     });
 
     mqttClient.on("message", (topic, payload) => {
