@@ -21,7 +21,7 @@ export default function App() {
   useEffect(() => {
     let isActive = true;
     
-    const mqttClient = mqtt.connect("ws://astraval.com:9001/mqtt", {
+    const mqttClient = mqtt.connect("wss://astraval.com:9001/mqtt", {
       username: "testuser",
       password: "password1",
       reconnectPeriod: 3000,
